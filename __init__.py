@@ -1,6 +1,6 @@
 __author__ = 'Leenix'
 
-from thingspeak_settings import *
+from thingspeak_config import *
 import urllib
 import httplib
 
@@ -12,16 +12,16 @@ class ThingspeakChannel(object):
     HEADERS = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
 
     @staticmethod
-    def update(entry):
+    def update(entry,server_address=SERVER_ADDRESS):
         params = urllib.urlencode(entry)
-        conn = httplib.HTTPConnection("api.thingspeak.com:80")
+        conn = httplib.HTTPConnection(server_address)
         conn.request("POST", "/update", params, ThingspeakChannel.HEADERS)
         response = conn.getresponse()
         conn.close()
         return response
 
     @staticmethod
-    def fetch(server_address, read_key, format_):
+    def fetch(read_key, format_, server_address=SERVER_ADDRESS):
         conn = httplib.HTTPConnection(server_address)
         path = "/channels/{0}/feed.{1}".format(read_key, format_)
         params = urllib.urlencode([('key', read_key)])
